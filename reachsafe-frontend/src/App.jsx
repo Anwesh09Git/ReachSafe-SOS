@@ -8,33 +8,27 @@ export default function App() {
   const [user, setUser] = useState(null);
   const [error, setError] = useState('');
   
-  // CRITICAL NEW STATE: Tracks which screen the user is looking at
   const [isRegistering, setIsRegistering] = useState(false);
 
-  // Live GPS Tracking Parameters
   const [isSosActive, setIsSosActive] = useState(false);
   const [location, setLocation] = useState({ lat: null, lng: null });
   const [trackingId, setTrackingId] = useState(null);
   const [statusMessage, setStatusMessage] = useState('System Standby');
 
-  // SECURE SEPARATED AUTH ENGINE
   const handleAuth = async (e) => {
     e.preventDefault();
     setError('');
 
     try {
       if (isRegistering) {
-        // ROUTE A: Explicit Registration Route
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         setUser(userCredential.user);
         alert("Account created successfully!");
       } else {
-        // ROUTE B: Explicit Login Route (Throws error if wrong password or user doesn't exist)
         const userCredential = await signInWithEmailAndPassword(auth, email, password);
         setUser(userCredential.user);
       }
     } catch (authError) {
-      // Clear out confusing technical codes for the user
       if (authError.code === 'auth/wrong-password' || authError.code === 'auth/invalid-credential') {
         setError('Invalid email or password. Please try again.');
       } else if (authError.code === 'auth/email-already-in-use') {
@@ -114,7 +108,6 @@ export default function App() {
     setStatusMessage('System Standby');
   };
 
-  // MAIN DASHBOARD VIEW
   if (user) {
     return (
       <div className="min-h-screen text-white p-6 font-sans flex items-center justify-center">
@@ -177,7 +170,6 @@ export default function App() {
     );
   }
 
-  // SEPARATED AUTHENTICATION GATEWAY VIEW
   return (
     <div className="min-h-screen flex flex-col justify-center items-center p-4 text-white">
       <div className="w-full max-w-md bg-slate-800 rounded-2xl shadow-xl p-8 border border-slate-700">
